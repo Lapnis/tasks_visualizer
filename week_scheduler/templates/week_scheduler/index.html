@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table th, table td {
+            height: 30px;
+            width: 200px;
+
+        }
+
+        table span {
+            display: block;
+            background-color: #09C;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Tabla calendario-->
+        <div class="col-md-12">
+            <table id="#our_table" border="1">
+                <tr>
+                    <th>Curso</th>
+                    <th>Semana 1</th>
+                    <th>Semana 2</th>
+                    <th>Semana 3</th>
+                    <th>Semana 4</th>
+                    <th>Semana 5</th>
+                    <th>Semana 6</th>
+                    <th>Semana 7</th>
+                </tr>
+                <tr>
+                    <td><span class="event" id="8" draggable="false" style="background-color: gray;">SOS</span></td>
+                    <td><span class="event" id="1" draggable="true">Tarea 1</span></td>
+                    <td><span class="event" id="5" draggable="true">Control</span></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><span class="event" id="6" draggable="true">Ashail</span></td>
+                    <td><span class="event" id="7" draggable="true">Charla</span></td>
+                </tr>
+                <tr>
+                    <td><span class="event" id="9" draggable="false" style="background-color: gray;">Redes</span></td>
+                    <td><span class="event" id="2" draggable="true">Informe</span></td>
+                    <td><span class="event" id="3" draggable="false" style="background-color: red;">Elimina</span></td>
+                    <td><span class="event" id="4" draggable="true">Tarea 3</span></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+        $('.event').on("dragstart", function (event) {
+            var dt = event.originalEvent.dataTransfer;
+            dt.setData('Text', $(this).attr('id'));
+        });
+        $('table td').on("dragenter dragover drop", function (event) {
+            event.preventDefault();
+            if (event.type === 'drop') {
+                var data = event.originalEvent.dataTransfer.getData('Text', $(this).attr('id'));
+                de = $('#' + data).detach();
+                de.appendTo($(this));
+            }
+            ;
+        });
+    })
+</script>
+</body>
+</html>
