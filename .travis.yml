@@ -5,7 +5,7 @@ python:
 install:
 - pip install urllib3[secure]
 - sudo pip install -r requirements.txt
-before-script:
+script:
 - python manage.py makemigrations
 - python manage.py migrate
-script: python manage.py test
+- python manage.py test
