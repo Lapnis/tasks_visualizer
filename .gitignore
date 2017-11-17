@@ -1,7 +1,6 @@
 .idea
 *.pyc
 /db.sqlite3
-/week_scheduler/migrations/00*.py
 .DS_Store
 
 
