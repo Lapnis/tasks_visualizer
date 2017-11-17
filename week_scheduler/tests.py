@@ -11,13 +11,13 @@ from pytz import utc
 class WeekModelTestCase(TestCase):
     def event_creator(self, name="Event", load=0, week=None):
         c = Course.objects.create(name="Curso", code="cc6969")
-        return Event.objects.create(name=name+str(datetime.now()),
+        return Event.objects.create(name=name + str(datetime.now()),
                                     load=load, week=week, type=0, course=c,
-                                    deadline=datetime(2017,11,25, tzinfo=utc))
+                                    deadline=datetime(2017, 11, 25, tzinfo=utc))
 
     def setUp(self):
-        Week.objects.create(since=datetime(2017, 11, 13, tzinfo=utc))
-        Week.objects.create(since=datetime(2017, 11, 20, tzinfo=utc))
+        self.w1 = Week.objects.create(since=datetime(2017, 11, 13, tzinfo=utc))
+        self.w2 = Week.objects.create(since=datetime(2017, 11, 20, tzinfo=utc))
 
     def test_week_query_by_since_exact_one(self):
         w = Week.objects.filter(since=datetime(2017, 11, 13, tzinfo=utc)).first()
@@ -42,12 +42,35 @@ class WeekModelTestCase(TestCase):
 
     def test_week_load_per_events(self):
         # arrange
-        w = Week.objects.filter(since=datetime(2017, 11, 13, tzinfo=utc)).first()
-        events = [self.event_creator(load=i, week=w) for i in range(5)]
+        pesos = [1, 1, 2, 3, 3]
+        events = [self.event_creator(load=p, week=self.w1) for p in pesos]
         # act
-        week_load = sum([1, 1, 2, 3, 3])
+        week_load = sum(pesos)
         # assert
-        self.assertEqual(week_load, w.load)
+        self.assertEqual(week_load, self.w1.load)
+
+    def test_week_load_when_event_is_deleted(self):
+        # arrange
+        pesos = [1, 1, 2, 3, 3]
+        events = [self.event_creator(load=p, week=self.w1) for p in pesos]
+        # act
+        week_load = self.w1.load
+        events[-1].delete()
+        # assert
+        self.assertEqual(week_load - events[-1].load, self.w1.load)
+
+    def test_week_load_when_event_is_moved(self):
+        # arrange
+        pesos = [1, 1, 2, 3, 3]
+        events = [self.event_creator(load=p, week=self.w1) for p in pesos]
+        # act
+        pre_load_w1 = self.w1.load
+        pre_load_w2 = self.w2.load
+        events[-1].switch_week(self.w2)
+        # assert
+        self.assertEqual(events[-1].week, self.w2)
+        self.assertEqual(self.w1.load, pre_load_w1 - events[-1].load)
+        self.assertEqual(self.w2.load, pre_load_w2 + events[-1].load)
 
 
 class CourseModelTestCase(TestCase):
@@ -65,7 +88,8 @@ class EventModelTestCase(TestCase):
         c = Course.objects.create(code="CC1000", name="Test")
         self.initial_week = Week.objects.create(since=datetime(2017, 11, 13, tzinfo=utc))
         Week.objects.create(since=datetime(2017, 11, 20, tzinfo=utc))
-        Event.objects.create(name="Control 1", deadline=datetime(2017, 11, 15, tzinfo=utc), course=c, type=0, week=self.initial_week)
+        Event.objects.create(name="Control 1", deadline=datetime(2017, 11, 15, tzinfo=utc), course=c, type=0,
+                             week=self.initial_week)
 
     def test_event_created_properly(self):
         c = Course.objects.filter(code="CC1000").first()

@@ -60,10 +60,11 @@ class Event(models.Model):
         deadline_week = self.deadline - timedelta(days=self.deadline.weekday())  # deadline's first weekday
         if self.week.since > Week.objects.filter(since=deadline_week).first().since:
             raise ValueError
+        self.week.load += self.load
 
     def save(self, *args, **kwargs):
-        self.pre_save_handler()
         self.check_load()
+        self.pre_save_handler()
         super(Event, self).save(*args, **kwargs)
 
     def check_load(self):
@@ -73,5 +74,11 @@ class Event(models.Model):
         elif self.load < 1:
             self.load = 1
 
-        #pdb.set_trace()
+    def delete(self):
+        self.week.load -= self.load
+        super(Event, self).delete()
+
+    def switch_week(self, new_week):
+        self.week.load -= self.load
+        self.week = new_week
         self.week.load += self.load
