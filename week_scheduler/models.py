@@ -2,11 +2,13 @@ from datetime import timedelta
 
 from django.db import models
 
+import pdb
+
 # Create your models here.
 
 
 class Week(models.Model):
-    since = models.DateField(null=False, name="since")
+    since = models.DateTimeField(null=False, name="since")
     load = models.IntegerField(null=True, blank=False, default=0, name="load")
 
     def __str__(self):
@@ -33,6 +35,9 @@ class Course(models.Model):
 
 
 class Event(models.Model):
+    """
+    Necessary initial parameters: deadline, name, week
+    """
     TYPES = ((0, 'test'),
              (1, 'homework'))
 
@@ -51,18 +56,22 @@ class Event(models.Model):
         verbose_name_plural = "eventos"
 
     def pre_save_handler(self):
-        deadline_week = self.deadline - timedelta(days=self.deadline.weekday())
-        if self.pk:
-            # already created, check if the week to save is no later than deadline's week
-            if self.week.since > Week.objects.filter(since=deadline_week).first().since:
-                raise ValueError
-        else:
-            # just created, we set te initial week according to deadline's week
-            week = Week.objects.filter(since=deadline_week.date()).first()
-            if week is None:
-                raise ValueError
-            self.week = week
+        # check if the week to save is no later than deadline's week
+        deadline_week = self.deadline - timedelta(days=self.deadline.weekday())  # deadline's first weekday
+        if self.week.since > Week.objects.filter(since=deadline_week).first().since:
+            raise ValueError
 
     def save(self, *args, **kwargs):
         self.pre_save_handler()
+        self.check_load()
         super(Event, self).save(*args, **kwargs)
+
+    def check_load(self):
+        """ Verifica los correctos valores de la carga de un evento [1,2,3] o los ajusta """
+        if self.load > 3:
+            self.load = 3
+        elif self.load < 1:
+            self.load = 1
+
+        #pdb.set_trace()
+        self.week.load += self.load
