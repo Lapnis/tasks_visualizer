@@ -1,13 +1,7 @@
 languaje: python
-
 python:
-- '3.6'
-
+- '3.5'
 install:
-  - pip install urllib3[secure]
-  - pip install -r requirements.txt
-
-before_script:
-  - python manage.py migrate
-
+- pip install urllib3[secure]
+- sudo pip install -r requirements.txt
 script: python manage.py test
