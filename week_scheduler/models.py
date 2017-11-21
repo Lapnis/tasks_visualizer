@@ -67,7 +67,7 @@ class Event(models.Model):
     def pre_save_handler(self):
         # check if the week to save is no later than deadline's week
         deadline_week = self.deadline - timedelta(days=self.deadline.weekday())  # deadline's first weekday
-        if self.week.since > Week.objects.filter(since=deadline_week).first().since:
+        if self.week.since > Week.objects.filter(since=deadline_week.date()).first().since:
             raise ValueError
 
         #check if course doesn't have a previous homonimous event
