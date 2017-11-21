@@ -8,11 +8,16 @@ import pdb
 
 
 class Week(models.Model):
+    number = models.IntegerField(null=False, name="number")
+    semester = models.CharField(null=False, name="semester", max_length=40)
     since = models.DateTimeField(null=False, name="since")
     load = models.IntegerField(null=True, blank=False, default=0, name="load")
 
     def __str__(self):
         return "week of " + self.since.strftime("%d/%-m/%Y")
+
+    def __eq__(self, other):
+        return self.since == other.since
 
     class Meta:
         verbose_name = "semana"
