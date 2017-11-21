@@ -162,3 +162,37 @@ class EventModelTestCase(TestCase):
         Week.objects.all().delete()
         Course.objects.all().delete()
         Event.objects.all().delete()
+
+
+class APITestCase(TestCase):
+    def setUp(self):
+        self.c = Course.objects.create(code="CC6402", name="Taller ágilidad y leanpio")
+        self.week = Week.objects.create(number=15, semester=1, since=datetime(2017, 11, 20, tzinfo=utc))
+        self.factory = RequestFactory()
+
+    def test_event_form_is_correct(self):
+        request = self.factory.post(path='/week_scheduler/add_event/')
+        request.POST = {
+            'course': 'CC6402',
+            'deadline': '1511136020',
+            'week': 15,
+            'semester': 1,
+            'load': 2,
+            'type': 0,
+            'name': 'Control 3'
+        }
+        response = add_event_form(request)
+        self.assertEqual(response.status_code, 200)
+
+        event = Event.objects.filter(name="Control 3").first()
+        self.assertIsNotNone(event)
+        self.assertEqual(event.name, "Control 3")
+        self.assertEqual(event.load, 2)
+        self.assertEqual(event.type, 0)
+
+        self.assertEqual(event.deadline.year, 2017)
+        self.assertEqual(event.deadline.month, 11)
+        self.assertEqual(event.deadline.day, 20)
+
+        self.assertEqual(self.week, event.week)
+        self.assertEqual(self.c, event.course)
