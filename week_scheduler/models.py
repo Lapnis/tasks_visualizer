@@ -60,6 +60,12 @@ class Event(models.Model):
         deadline_week = self.deadline - timedelta(days=self.deadline.weekday())  # deadline's first weekday
         if self.week.since > Week.objects.filter(since=deadline_week).first().since:
             raise ValueError
+
+        #check if course doesn't have a previous homonimous event
+        if Event.objects.filter(course=self.course, name=self.name).first():
+            raise ValueError
+
+
         self.week.load += self.load
 
     def save(self, *args, **kwargs):
