@@ -8,8 +8,12 @@ import pdb
 
 
 class Week(models.Model):
+    SEMESTER_CHOICES = ((0, 'Autumn'),
+                        (1, 'Spring'),
+                        (2, 'Summer'))
+
     number = models.IntegerField(null=False, name="number")
-    semester = models.CharField(null=False, name="semester", max_length=40)
+    semester = models.IntegerField(null=False, choices=SEMESTER_CHOICES, name="semester")
     since = models.DateTimeField(null=False, name="since")
     load = models.IntegerField(null=True, blank=False, default=0, name="load")
 

@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.core.handlers.wsgi import WSGIRequest
+from django.test.client import RequestFactory
 
 from week_scheduler.models import *
 from week_scheduler.views import *
@@ -19,8 +19,8 @@ class WeekModelTestCase(TestCase):
                                     deadline=datetime(2017, 11, 25, tzinfo=utc))
 
     def setUp(self):
-        self.w1 = Week.objects.create(number=14, semester="Primavera 2017", since=datetime(2017, 11, 13, tzinfo=utc))
-        self.w2 = Week.objects.create(number=15, semester="Primavera 2017", since=datetime(2017, 11, 20, tzinfo=utc))
+        self.w1 = Week.objects.create(number=14, semester=1, since=datetime(2017, 11, 13, tzinfo=utc))
+        self.w2 = Week.objects.create(number=15, semester=1, since=datetime(2017, 11, 20, tzinfo=utc))
 
     def test_week_query_by_since_exact_one(self):
         w = Week.objects.filter(since=datetime(2017, 11, 13, tzinfo=utc)).first()
@@ -89,8 +89,8 @@ class CourseModelTestCase(TestCase):
 class EventModelTestCase(TestCase):
     def setUp(self):
         c = Course.objects.create(code="CC1000", name="Test")
-        self.initial_week = Week.objects.create(number=14, semester="Primavera 2017", since=datetime(2017, 11, 13, tzinfo=utc))
-        Week.objects.create(number=15, semester="Primavera 2017", since=datetime(2017, 11, 20, tzinfo=utc))
+        self.initial_week = Week.objects.create(number=14, semester=1, since=datetime(2017, 11, 13, tzinfo=utc))
+        Week.objects.create(number=15, semester=1, since=datetime(2017, 11, 20, tzinfo=utc))
         Event.objects.create(name="Control 1", deadline=datetime(2017, 11, 15, tzinfo=utc), course=c, type=0,
                              week=self.initial_week)
 
