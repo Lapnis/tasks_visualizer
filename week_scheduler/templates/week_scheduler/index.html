@@ -2,11 +2,55 @@
 <html lang="en">
 <head>
     <!-- Latest compiled and minified JavaScript -->
+
+    <script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script>
+function clearForm() {
+    $("#course").val("CC6402");
+    $("#week").val("15");
+    $("#deadline").val("");
+    $("#name").val("");
+    $("#type").val("0");
+    $("#load").val("2");
+}
+
+function submitEvent(){
+    course = $("#course").val();
+    week = $("#week").val();
+    deadline = $("#deadline").val();
+    name = $("#name").val();
+    type = $("#type").val();
+    load = $("#load").val();
+    data = {
+        course : course,
+        week : week,
+        deadline: deadline,
+        name: name,
+        type: type,
+        load: load,
+    };
+
+    $.ajax({
+        url: "/week_scheduler/add_event/",
+        data : data,
+        method: "POST",
+        statusCode: {
+            200: function () {
+                alert("Se agerego exitosamente!");
+                clearForm();
+            }
+        }
+    });
+}
+    </script>
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
@@ -26,6 +70,60 @@
 </head>
 <body>
 <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Agregar evento</h2>
+            <div>
+                <div class="form-group">
+                    <label for="course">Curso</label>
+                    <select id="course">
+                        <option value="CC6402">Taller de Agilidad</option>
+                    </select>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="week">Semana</label>
+                    <select id="week">
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15" selected>15</option>
+                    </select>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="deadline">Deadline</label>
+                    <input type="text" id="deadline" placeholder="dd/mm/yyyy">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="name">Título</label>
+                    <input type="text" id="name" placeholder="Título del evento">
+                </div>
+                <div class="form-group">
+                    <label for="type">Tipo</label>
+                    <select id="type">
+                        <option value="0">Control</option>
+                        <option value="1">Tarea</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="load">Carga</label>
+                    <select id="load">
+                        <option value="1">Bajar</option>
+                        <option value="2" selected>Normal</option>
+                        <option value="3">Alta</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" onclick="submitEvent()">Agregar</button> <button class="btn btn-danger" onclick="clearForm()">Limpiar</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <!-- Tabla calendario-->
         <div class="col-md-12">
@@ -65,11 +163,6 @@
         </div>
     </div>
 </div>
-
-<script
-        src="https://code.jquery.com/jquery-3.2.1.min.js"
-        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous"></script>
 <script>
     $(document).ready(function () {
         $('.event').on("dragstart", function (event) {
