@@ -9,7 +9,10 @@ from week_scheduler.models import *
 import datetime
 
 def index(request):
-    return render(request, 'week_scheduler/index.html')
+    courses = Course.objects.all()
+    weeks = Week.objects.all()
+    myContext = {'courses': courses, 'weeks': weeks}
+    return render(request, 'week_scheduler/index.html', context=myContext)
 
 
 def  add_event_form(request):
