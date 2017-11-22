@@ -2,57 +2,13 @@
 <html lang="en">
 <head>
     <!-- Latest compiled and minified JavaScript -->
-
-    <script
-        src="https://code.jquery.com/jquery-3.2.1.min.js"
-        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-            crossorigin="anonymous"></script>
+    {% load static %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script>
-function clearForm() {
-    $("#course").val("CC6402");
-    $("#week").val("15");
-    $("#deadline").val("");
-    $("#name").val("");
-    $("#type").val("0");
-    $("#load").val("2");
-}
-
-function submitEvent(){
-    course = $("#course").val();
-    week = $("#week").val();
-    deadline = $("#deadline").val();
-    name = $("#name").val();
-    type = $("#type").val();
-    load = $("#load").val();
-    data = {
-        course : course,
-        week : week,
-        deadline: deadline,
-        name: name,
-        type: type,
-        load: load,
-    };
-
-    $.ajax({
-        url: "/week_scheduler/add_event/",
-        data : data,
-        method: "POST",
-        statusCode: {
-            200: function () {
-                alert("Se agerego exitosamente!");
-                clearForm();
-            }
-        }
-    });
-}
-    </script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href={% static 'css/image-picker.css' %}>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Week Scheduler</title>
     <style>
         table th, table td {
             height: 30px;
@@ -70,62 +26,9 @@ function submitEvent(){
 </head>
 <body>
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>Agregar evento</h2>
-            <div>
-                <div class="form-group">
-                    <label for="course">Curso</label>
-                    <select id="course">
-                        <option value="CC6402">Taller de Agilidad</option>
-                    </select>
-                </div>
-                <br>
-                <div class="form-group">
-                    <label for="week">Semana</label>
-                    <select id="week">
-                        <option value="10">10</option>
-                        <option value="11">11</option>
-                        <option value="12">12</option>
-                        <option value="13">13</option>
-                        <option value="14">14</option>
-                        <option value="15" selected>15</option>
-                    </select>
-                </div>
-                <br>
-                <div class="form-group">
-                    <label for="deadline">Deadline</label>
-                    <input type="text" id="deadline" placeholder="dd/mm/yyyy">
-                </div>
-                <br>
-                <div class="form-group">
-                    <label for="name">Título</label>
-                    <input type="text" id="name" placeholder="Título del evento">
-                </div>
-                <div class="form-group">
-                    <label for="type">Tipo</label>
-                    <select id="type">
-                        <option value="0">Control</option>
-                        <option value="1">Tarea</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="load">Carga</label>
-                    <select id="load">
-                        <option value="1">Bajar</option>
-                        <option value="2" selected>Normal</option>
-                        <option value="3">Alta</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-primary" onclick="submitEvent()">Agregar</button> <button class="btn btn-danger" onclick="clearForm()">Limpiar</button>
 
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Tabla calendario-->
     <div class="row">
-        <!-- Tabla calendario-->
         <div class="col-md-12">
             <table id="#our_table" border="1">
                 <tr>
@@ -162,9 +65,163 @@ function submitEvent(){
             </table>
         </div>
     </div>
+    <br>
+    <!-- Formulario para agregar tarea -->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-sm-1" id="adddiv">
+                    <button id="addbtn" type="button" class="btn btn-primary" href="#form" data-toggle="collapse">
+                        Agregar
+                    </button>
+                </div>
+                <div class="col-sm-1" id="canceldiv" hidden>
+                    <button id="cancelbtn" type="button" class="btn btn-danger" href="#form" data-toggle="collapse">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div id="form" class="collapse col-sm-6">
+                    <div class="row">
+                        <!-- Nombre -->
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Nombre</span>
+                                <input id="name" type="text" class="form-control"
+                                       placeholder="Informe practica, tarea 1, etc.">
+                            </div>
+                        </div>
+                        <!-- Tipo -->
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Tipo</span>
+                                <select id="type" class="form-control">
+                                    <option value="Control">Control</option>
+                                    <option value="Tarea">Tarea</option>
+                                    <option value="Informe">Informe</option>
+                                    <option value="Presentacion">Presentación</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <!-- Fecha -->
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Fecha</span>
+                                <input id="datepicker" type="text" class="form-control" placeholder="Click y escoge una fecha">
+                            </div>
+                        </div>
+                        <!-- Semana -->
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Semana</span>
+                                <select id="week" class="form-control">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <!-- Curso -->
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <span class="input-group-addon">Curso</span>
+                                <select id="class" class="form-control">
+                                    <option value="Sistemas Operativos">SOS</option>
+                                    <option value="Redes">NET</option>
+                                    <option value="Algoritmos">Logaritmos</option>
+                                    <option value="ProcesamientoDatos">Patos</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <!-- Peso -->
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <label>Peso</label>
+                                <select id="weight" class="image-picker">
+                                    <option
+                                            data-img-src='http://d2trtkcohkrm90.cloudfront.net/images/emoji/apple/ios-10/33/0753.png'
+                                            data-img-label='Relajado'
+                                            data-img-class="easy"
+                                            data-img-alt="Relajado"
+                                            value='1'
+                                    >
+                                    <option
+                                            data-img-src='http://d2trtkcohkrm90.cloudfront.net/images/emoji/apple/ios-10/33/0875.png'
+                                            data-img-label='Normal'
+                                            data-img-class="medium"
+                                            data-img-alt="Normal"
+                                            value='2'
+                                    >
+                                    <option
+                                            data-img-src='http://d2trtkcohkrm90.cloudfront.net/images/emoji/apple/ios-10/33/0775.png'
+                                            data-img-label='Intenso'
+                                            data-img-class="intense"
+                                            data-img-alt="Intenso"
+                                            value='3'
+                                    >
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <!-- Guardar -->
+                        <div class="col-sm-1">
+                            <button id="savebtn" type="button" class="btn btn-success">
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script
+        src="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src={% static 'js/image-picker.min.js' %}></script>
 <script>
     $(document).ready(function () {
+        $("#datepicker").datepicker();
+
+        $("#weight").imagepicker({
+            show_label: true,
+        });
+
+        var cleanForm = function () {
+
+        };
+
+        $("#addbtn").on('click', function () {
+            $("#canceldiv").show();
+            $("#adddiv").hide();
+        });
+
+        $("#cancelbtn").on('click', function () {
+            $("#canceldiv").hide();
+            $("#adddiv").show();
+            cleanForm();
+        });
+
         $('.event').on("dragstart", function (event) {
             var dt = event.originalEvent.dataTransfer;
             dt.setData('Text', $(this).attr('id'));
