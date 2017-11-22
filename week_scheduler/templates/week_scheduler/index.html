@@ -98,10 +98,8 @@
                             <div class="input-group">
                                 <span class="input-group-addon">Tipo</span>
                                 <select id="type" class="form-control">
-                                    <option value="Control">Control</option>
-                                    <option value="Tarea">Tarea</option>
-                                    <option value="Informe">Informe</option>
-                                    <option value="Presentacion">Presentación</option>
+                                    <option value="0">Control</option>
+                                    <option value="1">Tarea</option>
                                 </select>
                             </div>
                         </div>
@@ -112,7 +110,8 @@
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">Fecha</span>
-                                <input id="datepicker" type="text" class="form-control" placeholder="Click y escoge una fecha">
+                                <input id="datepicker" type="text" class="form-control"
+                                       placeholder="Click y escoge una fecha">
                             </div>
                         </div>
                         <!-- Semana -->
@@ -120,10 +119,9 @@
                             <div class="input-group">
                                 <span class="input-group-addon">Semana</span>
                                 <select id="week" class="form-control">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
+                                    {% for week in weeks %}
+                                        <option value="{{ week.id }}">{{ week.number }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
@@ -134,11 +132,10 @@
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <span class="input-group-addon">Curso</span>
-                                <select id="class" class="form-control">
-                                    <option value="Sistemas Operativos">SOS</option>
-                                    <option value="Redes">NET</option>
-                                    <option value="Algoritmos">Logaritmos</option>
-                                    <option value="ProcesamientoDatos">Patos</option>
+                                <select id="course" class="form-control">
+                                    {% for cours in courses %}
+                                        <option value="{{ cours.id }}">{{ cours.name }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
@@ -149,7 +146,7 @@
                         <div class="col-sm-6">
                             <div class="input-group">
                                 <label>Peso</label>
-                                <select id="weight" class="image-picker">
+                                <select id="load" class="image-picker">
                                     <option
                                             data-img-src='http://d2trtkcohkrm90.cloudfront.net/images/emoji/apple/ios-10/33/0753.png'
                                             data-img-label='Relajado'
@@ -179,6 +176,7 @@
                     <div class="row">
                         <!-- Guardar -->
                         <div class="col-sm-1">
+                            {% csrf_token %}
                             <button id="savebtn" type="button" class="btn btn-success">
                                 Guardar
                             </button>
@@ -201,15 +199,11 @@
 <script src={% static 'js/image-picker.min.js' %}></script>
 <script>
     $(document).ready(function () {
-        $("#datepicker").datepicker();
+        $("#datepicker").datepicker({ dateFormat: 'dd/mm/yy' });
 
-        $("#weight").imagepicker({
+        $("#load").imagepicker({
             show_label: true,
         });
-
-        var cleanForm = function () {
-
-        };
 
         $("#addbtn").on('click', function () {
             $("#canceldiv").show();
@@ -219,7 +213,7 @@
         $("#cancelbtn").on('click', function () {
             $("#canceldiv").hide();
             $("#adddiv").show();
-            cleanForm();
+            clearForm();
         });
 
         $('.event').on("dragstart", function (event) {
@@ -235,6 +229,54 @@
             }
             ;
         });
+
+        function dateTextToTimeStamp(date) {
+            s = date.split("/");
+            d = s[0];
+            m = s[1];
+            y = s[2];
+            //return (new Date(y, m, d)).getTime();
+            return date;
+        }
+
+        function clearForm() {
+            deadline = $("#datepicker").val("");
+            name = $("#name").val("");
+        }
+
+        $("#savebtn").click(submitEvent);
+
+        function submitEvent() {
+            var csrfToken = $("[name=csrfmiddlewaretoken]").val();
+
+            course = $("#course").val();
+            week = $("#week").val();
+            deadline = dateTextToTimeStamp($("#datepicker").val());
+            name = $("#name").val();
+            type = $("#type").val();
+            load = $("#load").val();
+            data = {
+                csrfmiddlewaretoken: csrfToken,
+                course: course,
+                week: week,
+                deadline: deadline,
+                name: name,
+                type: type,
+                load: load,
+            };
+
+            $.ajax({
+                url: "/week_scheduler/add_event/",
+                data: data,
+                method: "POST",
+                statusCode: {
+                    200: function () {
+                        alert("Se agerego exitosamente!");
+                        clearForm();
+                    }
+                }
+            });
+        }
     })
 </script>
 </body>
