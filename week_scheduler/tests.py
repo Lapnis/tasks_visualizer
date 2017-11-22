@@ -93,9 +93,7 @@ class EventModelTestCase(TestCase):
         c = Course.objects.create(code="CC1000", name="Test")
         self.initial_week = Week.objects.create(number=14, semester=1, since=datetime(2017, 11, 13, tzinfo=utc))
         Week.objects.create(number=15, semester=1, since=datetime(2017, 11, 20, tzinfo=utc))
-        Event.objects.create(name="Control 1", deadline=datetime(2017, 11, 15, tzinfo=utc), course=c, type=0,
-                             week=self.initial_week)
-
+        Event.objects.create(name="Control 1", deadline=datetime(2017, 11, 15, tzinfo=utc), course=c, type=0, week=self.initial_week)
         self.c2 = Course.objects.create(code="CC6402", name="Taller ágilidad y leanpio")
 
     def test_event_created_properly(self):
