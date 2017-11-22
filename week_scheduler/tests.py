@@ -1,10 +1,12 @@
+#!/usr/bin/env python
+# -- coding: utf-8 --
 from django.test import TestCase
 from django.test.client import RequestFactory
-
 from week_scheduler.models import *
 from week_scheduler.views import *
 from datetime import datetime
 from pytz import utc
+
 
 
 # Create your tests here.
