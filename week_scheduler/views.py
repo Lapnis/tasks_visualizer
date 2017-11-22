@@ -21,12 +21,12 @@ def  add_event_form(request):
         for w in Week.objects.all():
             print(str(w))
 
-        week = Week.objects.filter(number=int(post['week']), semester=int(post['semester'])).first()
-        course = Course.objects.filter(code=post['course']).first()
+        week = Week.objects.filter(id=int(post['week'])).first()
+        course = Course.objects.filter(id=post['course']).first()
 
         event = Event(course=course,
                       name=post['name'],
-                      deadline=datetime.datetime.fromtimestamp(int(post['deadline'])),
+                      deadline= datetime.datetime.strptime(post['deadline'], "%d/%m/%Y"),
                       week=week,
                       load=int(post['load']),
                       type=int(post['type']))
