@@ -8,6 +8,7 @@ import pdb
 
 
 class Week(models.Model):
+    #cal = models.CharField(default=None, max_length=20, name="cal")
     since = models.DateTimeField(null=False, name="since")
     load = models.IntegerField(null=True, blank=False, default=0, name="load")
 
@@ -89,4 +90,5 @@ class Event(models.Model):
 class Calendar(models.Model):
     #code = models.CharField(max_length=10, null=False, blank=False, name="code")
     name = models.CharField(max_length=20, name="name")
+    first_week = models.DateTimeField(default=None, name="first_week")
     num_weeks = models.IntegerField(default=0, name="num_weeks")

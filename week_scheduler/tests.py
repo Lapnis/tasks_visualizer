@@ -150,14 +150,16 @@ class EventModelTestCase(TestCase):
         self.assertTrue(e1.check_course(c1), "El evento debe saber a que curso pertence")
         self.assertFalse(e1.check_course(c2), "El evento debe saber a que curso no pertence")
 
+num_weeks = 15
+first_week = datetime(2017, 6,1, tzinfo=utc)
 
 class CalendarModelTestCase(TestCase):
     def setUp(self):
-        cal = Calendar.objects.create(name="Calendario", num_weeks=15)
+        cal = Calendar.objects.create(name="Calendario", first_week=first_week, num_weeks=num_weeks)
 
     def test_calendar_has_correct_default_number_of_weeks(self):
         #arrange
-        cal = Calendar.objects.create(name="Calendario")
+        cal = Calendar.objects.create(name="Calendario", first_week=first_week)
 
         #act
 
@@ -171,4 +173,13 @@ class CalendarModelTestCase(TestCase):
         #act
 
         #assert
-        self.assertEquals(cal.num_weeks, 15, "El calendario debe saber cuantas semanas mostrar")
+        self.assertEquals(cal.num_weeks, num_weeks, "El calendario debe saber cuantas semanas mostrar")
+
+    def test_calendar_has_correct_first_week(self):
+        # arrange
+        cal = Calendar.objects.filter(name="Calendario").first()
+
+        # act
+
+        # assert
+        self.assertEquals(cal.first_week, first_week, "El calendario debe tener una primera semana.")
