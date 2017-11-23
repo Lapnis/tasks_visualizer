@@ -174,7 +174,7 @@ class APITestCase(TestCase):
         request = self.factory.post(path='/week_scheduler/add_event/')
         request.POST = {
             'course': 'CC6402',
-            'deadline': '1511136020',
+            'deadline': '20/11/2017',
             'week': 15,
             'semester': 1,
             'load': 2,

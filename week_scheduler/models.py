@@ -70,11 +70,9 @@ class Event(models.Model):
         if self.week.since > Week.objects.filter(since=deadline_week.date()).first().since:
             raise ValueError
 
-        #check if course doesn't have a previous homonimous event
+        # check if course doesn't have a previous homonimous event
         if Event.objects.filter(course=self.course, name=self.name).first():
             raise ValueError
-
-
         self.week.load += self.load
 
     def save(self, *args, **kwargs):
