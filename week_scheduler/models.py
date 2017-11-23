@@ -85,3 +85,8 @@ class Event(models.Model):
 
     def check_course(self, course):
         return self.course == course
+
+class Calendar(models.Model):
+    #code = models.CharField(max_length=10, null=False, blank=False, name="code")
+    name = models.CharField(max_length=20, name="name")
+    num_weeks = models.IntegerField(default=0, name="num_weeks")
