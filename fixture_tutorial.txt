@@ -1,0 +1,4 @@
+1. Asegurarse que la base de datos posee las migraciones adecuadas.
+2. Para cargar los datos usar:
+	$ python manage.py loaddata fixturev1.json
+

@@ -8,11 +8,20 @@ import pdb
 
 
 class Week(models.Model):
+    SEMESTER_CHOICES = ((0, 'Autumn'),
+                        (1, 'Spring'),
+                        (2, 'Summer'))
+
+    number = models.IntegerField(null=False, name="number")
+    semester = models.IntegerField(null=False, choices=SEMESTER_CHOICES, name="semester")
     since = models.DateTimeField(null=False, name="since")
     load = models.IntegerField(null=True, blank=False, default=0, name="load")
 
     def __str__(self):
         return "week of " + self.since.strftime("%d/%-m/%Y")
+
+    def __eq__(self, other):
+        return self.since == other.since
 
     class Meta:
         verbose_name = "semana"
@@ -58,7 +67,11 @@ class Event(models.Model):
     def pre_save_handler(self):
         # check if the week to save is no later than deadline's week
         deadline_week = self.deadline - timedelta(days=self.deadline.weekday())  # deadline's first weekday
-        if self.week.since > Week.objects.filter(since=deadline_week).first().since:
+        if self.week.since > Week.objects.filter(since=deadline_week.date()).first().since:
+            raise ValueError
+
+        # check if course doesn't have a previous homonimous event
+        if Event.objects.filter(course=self.course, name=self.name).first():
             raise ValueError
         self.week.load += self.load
 

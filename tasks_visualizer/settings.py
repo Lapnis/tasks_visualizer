@@ -26,7 +26,8 @@ SECRET_KEY = '3k#1-5lr_09rbj+#0_mtz=-za#$6gtvfi&d@$g0y#+tu+%x-$u'
 DEBUG = True
 
 ALLOWED_HOSTS = ['tasksvisualizer.herokuapp.com',
-                 'localhost']
+                 'localhost',
+                 '127.0.0.1']
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
