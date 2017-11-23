@@ -13,9 +13,7 @@
         table th, table td {
             height: 30px;
             width: 200px;
-
         }
-
         table span {
             display: block;
             background-color: #09C;
@@ -109,7 +107,7 @@
                         <!-- Fecha -->
                         <div class="col-sm-6">
                             <div class="input-group">
-                                <span class="input-group-addon">Fecha</span>
+                                <span class="input-group-addon">Fecha de término</span>
                                 <input id="datepicker" type="text" class="form-control"
                                        placeholder="Click y escoge una fecha">
                             </div>
@@ -117,7 +115,7 @@
                         <!-- Semana -->
                         <div class="col-sm-6">
                             <div class="input-group">
-                                <span class="input-group-addon">Semana</span>
+                                <span class="input-group-addon">Asignar a semana</span>
                                 <select id="week" class="form-control">
                                     {% for week in weeks %}
                                         <option value="{{ week.id }}">{{ week.number }}</option>
@@ -133,8 +131,8 @@
                             <div class="input-group">
                                 <span class="input-group-addon">Curso</span>
                                 <select id="course" class="form-control">
-                                    {% for cours in courses %}
-                                        <option value="{{ cours.id }}">{{ cours.name }}</option>
+                                    {% for course in courses %}
+                                        <option value="{{ course.code }}">{{ course.name }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -200,22 +198,18 @@
 <script>
     $(document).ready(function () {
         $("#datepicker").datepicker({ dateFormat: 'dd/mm/yy' });
-
         $("#load").imagepicker({
             show_label: true,
         });
-
         $("#addbtn").on('click', function () {
             $("#canceldiv").show();
             $("#adddiv").hide();
         });
-
         $("#cancelbtn").on('click', function () {
             $("#canceldiv").hide();
             $("#adddiv").show();
             clearForm();
         });
-
         $('.event').on("dragstart", function (event) {
             var dt = event.originalEvent.dataTransfer;
             dt.setData('Text', $(this).attr('id'));
@@ -229,7 +223,6 @@
             }
             ;
         });
-
         function dateTextToTimeStamp(date) {
             s = date.split("/");
             d = s[0];
@@ -238,17 +231,13 @@
             //return (new Date(y, m, d)).getTime();
             return date;
         }
-
         function clearForm() {
             deadline = $("#datepicker").val("");
             name = $("#name").val("");
         }
-
         $("#savebtn").click(submitEvent);
-
         function submitEvent() {
             var csrfToken = $("[name=csrfmiddlewaretoken]").val();
-
             course = $("#course").val();
             week = $("#week").val();
             deadline = dateTextToTimeStamp($("#datepicker").val());
@@ -264,14 +253,13 @@
                 type: type,
                 load: load,
             };
-
             $.ajax({
                 url: "/week_scheduler/add_event/",
                 data: data,
                 method: "POST",
                 statusCode: {
                     200: function () {
-                        alert("Se agerego exitosamente!");
+                        alert("Se agregó exitosamente!");
                         clearForm();
                     }
                 }
