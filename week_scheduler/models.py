@@ -82,3 +82,6 @@ class Event(models.Model):
         self.week.load -= self.load
         self.week = new_week
         self.week.load += self.load
+
+    def check_course(self, course):
+        return self.course == course

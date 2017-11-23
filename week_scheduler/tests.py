@@ -137,3 +137,15 @@ class EventModelTestCase(TestCase):
         self.assertEqual(e1.load, 1, "La tarea tiene la prioridad mas baja")
         self.assertEqual(e2.load, 2, "La tarea tiene la prioridad media")
         self.assertEqual(e3.load, 3, "La tarea tiene la prioridad mas alta")
+
+    def test_event_belongs_to_a_single_course(self):
+        #arrange
+        c1 = Course.objects.create(code="CC1001", name="Curso 1")
+        c2 = Course.objects.create(code="CC1002", name="Curso 2")
+
+        e1 = Event.objects.create(name="Tarea 1", deadline=datetime(2017,11,25, tzinfo = utc),
+                                  course=c1, type=0, load=1, week=self.initial_week)
+        #act
+        #assert
+        self.assertTrue(e1.check_course(c1), "El evento debe saber a que curso pertence")
+        self.assertFalse(e1.check_course(c2), "El evento debe saber a que curso no pertence")
