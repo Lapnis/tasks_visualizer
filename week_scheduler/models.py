@@ -23,6 +23,14 @@ class Week(models.Model):
     def __eq__(self, other):
         return self.since == other.since
 
+    def color_picker(self):
+        if self.load < 5:
+            return  "#00FF00" #"Verde"
+        elif 5 <= self.load < 10:
+            return "#FFFF00"  #"Amarillo"
+        elif self.load >= 10:
+            return "#FF0000" #"Rojo"
+
     class Meta:
         verbose_name = "semana"
         verbose_name_plural = "semanas"
