@@ -16,8 +16,8 @@ $(document).ready(function () {
     });
 
     $(".load-1").addClass("bg-success");
-        $(".load-2").addClass("bg-info");
-        $(".load-3").addClass("bg-danger");
+    $(".load-2").addClass("bg-info");
+    $(".load-3").addClass("bg-danger");
 
     $("#datepicker").datepicker({dateFormat: 'dd/mm/yy'});
     $("#load").imagepicker({
@@ -31,18 +31,6 @@ $(document).ready(function () {
         $("#canceldiv").hide();
         $("#adddiv").show();
         clearForm();
-    });
-    $('.event').on("dragstart", function (event) {
-        var dt = event.originalEvent.dataTransfer;
-        dt.setData('Text', $(this).attr('id'));
-    });
-    $('table td').on("dragenter dragover drop", function (event) {
-        event.preventDefault();
-        if (event.type === 'drop') {
-            var data = event.originalEvent.dataTransfer.getData('Text', $(this).attr('id'));
-            de = $('#' + data).detach();
-            de.appendTo($(this));
-        }
     });
 
     function dateTextToTimeStamp(date) {
@@ -60,6 +48,29 @@ $(document).ready(function () {
     }
 
     $("#savebtn").click(submitEvent);
+
+    $(".weekEvent").change(function () {
+        var csrfToken = $("[name=csrfmiddlewaretoken]").val();
+
+        data = {
+            csrfmiddlewaretoken: csrfToken,
+            eventId: $(this).data('id'),
+            newWeek: $(this).val(),
+        };
+        $.ajax({
+            url: "/week_scheduler/change_event_week/",
+            data: data,
+            method: "POST",
+            statusCode: {
+                200: function () {
+                    location.reload();
+                }
+            },
+            error: function () {
+                alert("ups, ha ocurrido un error :(");
+            }
+        });
+    });
 
     function submitEvent() {
         var csrfToken = $("[name=csrfmiddlewaretoken]").val();
@@ -86,7 +97,11 @@ $(document).ready(function () {
                 200: function () {
                     alert("Se agregó exitosamente!");
                     clearForm();
+                    location.reload();
                 }
+            },
+            error: function () {
+                alert("ups, ha ocurrido un error :(");
             }
         });
     }
