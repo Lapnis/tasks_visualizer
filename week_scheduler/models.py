@@ -71,9 +71,11 @@ class Event(models.Model):
         if self.week.since > Week.objects.filter(since=deadline_week.date()).first().since:
             raise ValueError
 
-        # check if course doesn't have a previous homonimous event
-        if Event.objects.filter(course=self.course, name=self.name).first():
-            raise ValueError
+        # check if course doesn't have a previous homonym event
+        homonym = Event.objects.filter(course=self.course, name=self.name).first()
+        if homonym:
+            if homonym.id != self.id:
+                raise ValueError
         self.week.load += self.load
         self.week.save()
 
@@ -98,7 +100,5 @@ class Event(models.Model):
         self.week.load -= self.load
         self.week.save()  # Updates load of old week
         self.week = new_week
-        self.week.load += self.load
-        self.week.save()  # Updates load of new week
-        self.save()  # Saves changes
+        self.save()  # Saves changes, new week is also saved here
 
