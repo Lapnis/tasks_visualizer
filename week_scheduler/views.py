@@ -14,6 +14,24 @@ def index(request):
     myContext = {'courses': courses, 'weeks': weeks, 'events': events}
     return render(request, 'week_scheduler/index.html', context=myContext)
 
+def change_event_week(request):
+    if request.POST:
+        post = request.POST
+
+        event = Event.objects.get(id=int(post['eventId']))
+        week = Week.objects.get(id=int(post['newWeek']))
+
+        try:
+            event.switch_week(week)
+            return HttpResponse(status=200)
+        except ValueError as e:
+            return HttpResponseBadRequest({'Save error: ' + e.__str__()})
+        except Exception as e:
+            return HttpResponseBadRequest({'Unexpected error: ' + e.__str__()})
+
+    else:
+        return HttpResponseBadRequest({'POST method'})
+
 
 def add_event_form(request):
     """ Creates Event object from data given in frontend and returns response """
