@@ -75,6 +75,7 @@ class Event(models.Model):
         if Event.objects.filter(course=self.course, name=self.name).first():
             raise ValueError
         self.week.load += self.load
+        self.week.save()
 
     def save(self, *args, **kwargs):
         self.check_load()
@@ -90,9 +91,14 @@ class Event(models.Model):
 
     def delete(self):
         self.week.load -= self.load
+        self.week.save()
         super(Event, self).delete()
 
     def switch_week(self, new_week):
         self.week.load -= self.load
+        self.week.save()  # Updates load of old week
         self.week = new_week
         self.week.load += self.load
+        self.week.save()  # Updates load of new week
+        self.save()  # Saves changes
+
