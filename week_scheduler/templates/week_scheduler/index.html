@@ -18,58 +18,6 @@
 </head>
 <body>
 <div class="container-fluid">
-
-    <!-- Tabla calendario-->
-    <div class="row">
-        <div class="col-md-12">
-            <table id="#our_table" class="table table-bordered">
-                <tr>
-                    <th>Curso</th>
-                    {% for week in weeks %}
-                        <th weekId="{{ week.id }}">{{ week.number }}</th>
-                    {% endfor %}
-                </tr>
-                {% for course in courses %}
-                    <tr>
-                        <td>
-                            <div
-                                    class="course"
-                                    courseCode="{{ course.code }}"
-                                    draggable="false">
-                                {{ course.name }}
-                            </div>
-                        </td>
-                        {% for week in weeks %}
-                            <td>
-                                {% for event in events %}
-                                    {% if event.course == course %}
-                                        {% if event.week == week %}
-                                            <div
-                                                    class="event load-{{ event.load }}"
-                                                    id="event{{ event.id }}"
-                                                    draggable="true">
-                                                <label>
-                                                    Nombre: {{ event.name }}
-                                                </label>
-                                                <br>
-                                                <label>
-                                                    Tipo: {{ event.get_type_display }}
-                                                </label>
-                                                <br>
-                                                <label>
-                                                    Fecha termino: {{ event.deadline }}
-                                                </label>
-                                            </div>
-                                        {% endif %}
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-    </div>
     <br>
     <!-- Formulario para agregar tarea -->
     <div class="row">
@@ -80,9 +28,13 @@
                         Agregar
                     </button>
                 </div>
-                <div class="col-sm-1" id="canceldiv" hidden>
+                <div class="col-sm-3" id="canceldiv" hidden>
                     <button id="cancelbtn" type="button" class="btn btn-danger" href="#form" data-toggle="collapse">
                         Cancelar
+                    </button>
+                    {% csrf_token %}
+                    <button id="savebtn" type="button" class="btn btn-success">
+                        Guardar
                     </button>
                 </div>
             </div>
@@ -180,15 +132,81 @@
                     <br>
                     <div class="row">
                         <!-- Guardar -->
-                        <div class="col-sm-1">
-                            {% csrf_token %}
-                            <button id="savebtn" type="submit" class="btn btn-success">
-                                Guardar
-                            </button>
-                        </div>
+
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Tabla calendario-->
+    <div class="row">
+        <div class="col-md-12">
+            <table id="#our_table" class="table table-bordered">
+                <tr>
+                    <th>Curso</th>
+                    {% for week in weeks %}
+                        <th weekId="{{ week.id }}">{{ week.number }}</th>
+                    {% endfor %}
+                </tr>
+                {% for course in courses %}
+                    <tr>
+                        <td>
+                            <div
+                                    class="course"
+                                    courseCode="{{ course.code }}">
+                                {{ course.name }}
+                            </div>
+                        </td>
+                        {% for week in weeks %}
+                            <td>
+                                {% for event in events %}
+                                    {% if event.course == course %}
+                                        {% if event.week == week %}
+                                            <div
+                                                    class="event load-{{ event.load }}"
+                                                    id="event{{ event.id }}">
+                                                <label>
+                                                    Nombre: {{ event.name }}
+                                                </label>
+                                                <br>
+                                                <label>
+                                                    Tipo: {{ event.get_type_display }}
+                                                </label>
+                                                <br>
+                                                <label>
+                                                    Fecha termino: {{ event.deadline }}
+                                                </label>
+                                                <br>
+                                                <div class="form-group">
+                                                    <label class="control-label sr-only" for="eventWeek{{ event.id }}">
+                                                        Semana
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">Semana</span>
+                                                        <select name="eventWeek{{ event.id }}"
+                                                                class="weekEvent form-control input-sm"
+                                                                data-id="{{ event.id }}">
+                                                            {% for eventweek in weeks %}
+                                                                {% if week.id == eventweek.id %}
+                                                                    <option selected
+                                                                            value="{{ eventweek.id }}">{{ eventweek.number }}</option>
+                                                                {% else %}
+                                                                    <option value="{{ eventweek.id }}">{{ eventweek.number }}</option>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
 </div>
