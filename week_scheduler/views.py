@@ -10,7 +10,8 @@ import datetime
 def index(request):
     courses = Course.objects.all()
     weeks = Week.objects.all()
-    myContext = {'courses': courses, 'weeks': weeks}
+    events = Event.objects.all()
+    myContext = {'courses': courses, 'weeks': weeks, 'events': events}
     return render(request, 'week_scheduler/index.html', context=myContext)
 
 
