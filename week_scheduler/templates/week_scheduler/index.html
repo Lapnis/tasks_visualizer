@@ -10,16 +10,9 @@
     <meta charset="UTF-8">
     <title>Week Scheduler</title>
     <style>
-        table th, table td {
-            height: 30px;
-            width: 200px;
-        }
-
-        table span {
-            display: block;
-            background-color: #09C;
-            height: 100%;
-            width: 100%;
+        .event {
+            border: 1px solid blue;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -29,7 +22,7 @@
     <!-- Tabla calendario-->
     <div class="row">
         <div class="col-md-12">
-            <table id="#our_table" border="1">
+            <table id="#our_table" class="table table-bordered">
                 <tr>
                     <th>Curso</th>
                     {% for week in weeks %}
@@ -38,25 +31,35 @@
                 </tr>
                 {% for course in courses %}
                     <tr>
-                        <td><span
-                                class="event"
-                                courseCode="{{ course.code }}"
-                                draggable="false"
-                                style="background-color: gray;">
-                            {{ course.name }}
-                        </span>
+                        <td>
+                            <div
+                                    class="course"
+                                    courseCode="{{ course.code }}"
+                                    draggable="false">
+                                {{ course.name }}
+                            </div>
                         </td>
                         {% for week in weeks %}
                             <td>
                                 {% for event in events %}
                                     {% if event.course == course %}
                                         {% if event.week == week %}
-                                            <span
-                                                    class="event"
-                                                    id="{{ event.id }}"
+                                            <div
+                                                    class="event load-{{ event.load }}"
+                                                    id="event{{ event.id }}"
                                                     draggable="true">
-                                                {{ event.name }}
-                                            </span>
+                                                <label>
+                                                    Nombre: {{ event.name }}
+                                                </label>
+                                                <br>
+                                                <label>
+                                                    Tipo: {{ event.type }}
+                                                </label>
+                                                <br>
+                                                <label>
+                                                    Fecha termino: {{ event.deadline }}
+                                                </label>
+                                            </div>
                                         {% endif %}
                                     {% endif %}
                                 {% endfor %}
@@ -201,6 +204,10 @@
 <script src={% static 'js/image-picker.min.js' %}></script>
 <script>
     $(document).ready(function () {
+        $(".load-1").addClass("bg-success");
+        $(".load-2").addClass("bg-info");
+        $(".load-3").addClass("bg-danger");
+
         $("#datepicker").datepicker({dateFormat: 'dd/mm/yy'});
         $("#load").imagepicker({
             show_label: true,
