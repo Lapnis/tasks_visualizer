@@ -10,15 +10,9 @@
     <meta charset="UTF-8">
     <title>Week Scheduler</title>
     <style>
-        table th, table td {
-            height: 30px;
-            width: 200px;
-        }
-        table span {
-            display: block;
-            background-color: #09C;
-            height: 100%;
-            width: 100%;
+        .event {
+            border: 1px solid blue;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -28,38 +22,51 @@
     <!-- Tabla calendario-->
     <div class="row">
         <div class="col-md-12">
-            <table id="#our_table" border="1">
+            <table id="#our_table" class="table table-bordered">
                 <tr>
                     <th>Curso</th>
-                    <th>Semana 1</th>
-                    <th>Semana 2</th>
-                    <th>Semana 3</th>
-                    <th>Semana 4</th>
-                    <th>Semana 5</th>
-                    <th>Semana 6</th>
-                    <th>Semana 7</th>
+                    {% for week in weeks %}
+                        <th weekId="{{ week.id }}">{{ week.number }}</th>
+                    {% endfor %}
                 </tr>
-                <tr>
-                    <td><span class="event" id="8" draggable="false" style="background-color: gray;">SOS</span></td>
-                    <td><span class="event" id="1" draggable="true">Tarea 1</span></td>
-                    <td><span class="event" id="5" draggable="true">Control</span></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td><span class="event" id="6" draggable="true">Ashail</span></td>
-                    <td><span class="event" id="7" draggable="true">Charla</span></td>
-                </tr>
-                <tr>
-                    <td><span class="event" id="9" draggable="false" style="background-color: gray;">Redes</span></td>
-                    <td><span class="event" id="2" draggable="true">Informe</span></td>
-                    <td><span class="event" id="3" draggable="false" style="background-color: red;">Elimina</span></td>
-                    <td><span class="event" id="4" draggable="true">Tarea 3</span></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-
-                </tr>
+                {% for course in courses %}
+                    <tr>
+                        <td>
+                            <div
+                                    class="course"
+                                    courseCode="{{ course.code }}"
+                                    draggable="false">
+                                {{ course.name }}
+                            </div>
+                        </td>
+                        {% for week in weeks %}
+                            <td>
+                                {% for event in events %}
+                                    {% if event.course == course %}
+                                        {% if event.week == week %}
+                                            <div
+                                                    class="event load-{{ event.load }}"
+                                                    id="event{{ event.id }}"
+                                                    draggable="true">
+                                                <label>
+                                                    Nombre: {{ event.name }}
+                                                </label>
+                                                <br>
+                                                <label>
+                                                    Tipo: {{ event.get_type_display }}
+                                                </label>
+                                                <br>
+                                                <label>
+                                                    Fecha termino: {{ event.deadline }}
+                                                </label>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
             </table>
         </div>
     </div>
@@ -175,7 +182,7 @@
                         <!-- Guardar -->
                         <div class="col-sm-1">
                             {% csrf_token %}
-                            <button id="savebtn" type="button" class="btn btn-success">
+                            <button id="savebtn" type="submit" class="btn btn-success">
                                 Guardar
                             </button>
                         </div>

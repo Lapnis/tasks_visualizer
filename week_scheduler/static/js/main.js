@@ -15,6 +15,9 @@ $(document).ready(function () {
         }
     });
 
+    $(".load-1").addClass("bg-success");
+        $(".load-2").addClass("bg-info");
+        $(".load-3").addClass("bg-danger");
 
     $("#datepicker").datepicker({dateFormat: 'dd/mm/yy'});
     $("#load").imagepicker({
