@@ -15,10 +15,9 @@ def index(request):
 
 
 def add_event_form(request):
+    """ Creates Event object from data given in frontend and returns response """
     if request.POST:
         post = request.POST
-        for w in Week.objects.all():
-            print(str(w))
 
         week = Week.objects.filter(number=int(post['week'])).first()
         course = Course.objects.filter(code=post['course']).first()
@@ -34,6 +33,8 @@ def add_event_form(request):
             return HttpResponse(status=200)
         except ValueError as e:
             return HttpResponseBadRequest({'Save error: ' + e.__str__()})
+        except Exception as e:
+            return HttpResponseBadRequest({'Unexpected error: ' + e.__str__()})
 
     else:
         return HttpResponseBadRequest({'POST method'})

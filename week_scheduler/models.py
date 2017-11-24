@@ -67,13 +67,17 @@ class Event(models.Model):
     def pre_save_handler(self):
         # check if the week to save is no later than deadline's week
         deadline_week = self.deadline - timedelta(days=self.deadline.weekday())  # deadline's first weekday
+
         if self.week.since > Week.objects.filter(since=deadline_week.date()).first().since:
             raise ValueError
 
-        # check if course doesn't have a previous homonimous event
-        if Event.objects.filter(course=self.course, name=self.name).first():
-            raise ValueError
+        # check if course doesn't have a previous homonym event
+        homonym = Event.objects.filter(course=self.course, name=self.name).first()
+        if homonym:
+            if homonym.id != self.id:
+                raise ValueError
         self.week.load += self.load
+        self.week.save()
 
     def save(self, *args, **kwargs):
         self.check_load()
@@ -89,9 +93,12 @@ class Event(models.Model):
 
     def delete(self):
         self.week.load -= self.load
+        self.week.save()
         super(Event, self).delete()
 
     def switch_week(self, new_week):
         self.week.load -= self.load
+        self.week.save()  # Updates load of old week
         self.week = new_week
-        self.week.load += self.load
+        self.save()  # Saves changes, new week is also saved here
+
