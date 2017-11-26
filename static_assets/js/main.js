@@ -49,7 +49,7 @@ $(document).ready(function () {
 
     $("#savebtn").click(submitEvent);
 
-    $(".weekEvent").change(function () {
+    $("#dialog").on('change', '.weekEvent', function () {
         var csrfToken = $("[name=csrfmiddlewaretoken]").val();
 
         data = {
@@ -105,4 +105,18 @@ $(document).ready(function () {
             }
         });
     }
+
+    $("#dialog").dialog(
+        {
+            autoOpen: false
+        });
+
+    $(".event").click(function () {
+        var id = $(this).attr('id');
+        var innerHtml = $("#" + id + "details").html();
+        var title = $("#" + id + "details").data('name');
+        $("#dialog").html(innerHtml);
+        $("#dialog").dialog("option", 'title', title);
+        $("#dialog").dialog("open");
+    });
 });
