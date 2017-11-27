@@ -177,6 +177,7 @@
                                     {% for event in events %}
                                         {% if event.course == course %}
                                             {% if event.week == week %}
+                                                <!-- Dialog de detalles -->
                                                 <div
                                                         class="event load-{{ event.load }}"
                                                         id="event{{ event.id }}">
@@ -187,35 +188,55 @@
                                                             id="event{{ event.id }}details"
                                                             data-name="{{ event.name }}"
                                                             hidden>
-                                                        <label>
-                                                            Tipo: {{ event.get_type_display }}
-                                                        </label>
-                                                        <br>
-                                                        <label>
-                                                            Fecha termino: {{ event.deadline }}
-                                                        </label>
-                                                        <br>
-                                                        <div class="form-group">
-                                                            <label class="control-label sr-only"
-                                                                   for="eventWeek{{ event.id }}">
-                                                                Semana
-                                                            </label>
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon">Semana</span>
-                                                                <select name="eventWeek{{ event.id }}"
-                                                                        class="weekEvent form-control input-sm"
-                                                                        data-id="{{ event.id }}">
-                                                                    {% for eventweek in weeks %}
-                                                                        {% if week.id == eventweek.id %}
-                                                                            <option selected
-                                                                                    value="{{ eventweek.id }}">
-                                                            {{ eventweek.number }}</option>
-                                                                        {% else %}
-                                                                            <option value="{{ eventweek.id }}">
-                                                            {{ eventweek.number }}</option>
-                                                                        {% endif %}
-                                                                    {% endfor %}
-                                                                </select>
+                                                        <div class="row">
+                                                            <div class="col-sm-9">
+                                                                <label>
+                                                                    Tipo: {{ event.get_type_display }}
+                                                                </label>
+                                                                <br>
+                                                                <label>
+                                                                    Fecha termino: {{ event.deadline }}
+                                                                </label>
+                                                                <br>
+                                                            </div>
+                                                            <div class="col-sm-1">
+                                                                {% if event.load == 1 %}
+                                                                    <img src="http://d2trtkcohkrm90.cloudfront.net/images/emoji/apple/ios-10/33/0753.png"
+                                                                         alt="Relajado">
+                                                                {% elif event.load == 2 %}
+                                                                    <img src="http://d2trtkcohkrm90.cloudfront.net/images/emoji/apple/ios-10/33/0875.png"
+                                                                         alt="Normal">
+                                                                {% elif event.load == 3 %}
+                                                                    <img src="http://d2trtkcohkrm90.cloudfront.net/images/emoji/apple/ios-10/33/0775.png"
+                                                                         alt="Intenso">
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-sm-12">
+                                                                <div class="form-group">
+                                                                    <label class="control-label sr-only"
+                                                                           for="eventWeek{{ event.id }}">
+                                                                        Semana
+                                                                    </label>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-addon">Semana</span>
+                                                                        <select name="eventWeek{{ event.id }}"
+                                                                                class="weekEvent form-control input-sm"
+                                                                                data-id="{{ event.id }}">
+                                                                            {% for eventweek in weeks %}
+                                                                                {% if week.id == eventweek.id %}
+                                                                                    <option selected
+                                                                                            value="{{ eventweek.id }}">
+                                                                                        {{ eventweek.number }}</option>
+                                                                                {% else %}
+                                                                                    <option value="{{ eventweek.id }}">
+                                                                                        {{ eventweek.number }}</option>
+                                                                                {% endif %}
+                                                                            {% endfor %}
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
