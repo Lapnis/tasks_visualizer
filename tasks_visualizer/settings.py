@@ -26,6 +26,7 @@ SECRET_KEY = '3k#1-5lr_09rbj+#0_mtz=-za#$6gtvfi&d@$g0y#+tu+%x-$u'
 DEBUG = True
 
 ALLOWED_HOSTS = ['tasksvisualizer.herokuapp.com',
+                 'taskvisualizernico.herokuapp.com',
                  'localhost',
                  '127.0.0.1']
 
